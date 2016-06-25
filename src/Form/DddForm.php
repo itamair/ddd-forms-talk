@@ -11,6 +11,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use \Drupal\Core\Ajax\AjaxResponse;
+use \Drupal\Core\Ajax\HtmlCommand;
 
 /**
  * Class DddForm.
@@ -163,6 +165,25 @@ class DddForm extends FormBase {
       '#options' => $this->subscriptionsOptions,
       '#default_value' => 'Newsletter',
       '#required' => TRUE,
+      '#ajax' => [
+        'callback' => [$this, 'subscriptionSelectAjax'],
+        'event' => 'change',
+        'effect' => 'fade',
+        'speed' => 'default',
+        'progress' => [
+          'type' => 'throbber',
+          'message' => $this->t('Fetching data ...'),
+        ],
+      ],
+    ];
+
+    $form['magazine_view'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'div',
+      '#value' => NULL,
+      '#attributes' => [
+        'id' => 'magazine-view',
+      ],
     ];
 
     // Submit button.
@@ -200,6 +221,18 @@ class DddForm extends FormBase {
       );
     }
 
+    // !Important
+    // Set the form "magazine_view" corresponding with the subscription input.
+    $selected_subscription = $form_state->getValue('subscription');
+    if ('0' != $selected_subscription) {
+      $magazine_view = $this->generateSubscriptionFormElementView('node', $selected_subscription, 'subscription_form');
+      // !Important: keep the id selector, for subsequent ajax calls.
+      $magazine_view['#attributes'] = [
+        'id' => 'magazine-view',
+      ];
+      $form['magazine_view'] = $magazine_view;
+    }
+
   }
 
   /**
@@ -222,6 +255,62 @@ class DddForm extends FormBase {
       [
         '@values' => $this->renderer->render($submitted_data_render_array),
       ]));
+  }
+
+  /**
+   * Ajax callback for the Subscription Select.
+   */
+  public function subscriptionSelectAjax(array &$form, FormStateInterface $form_state) {
+
+    // Fetch the selected subscription node id.
+    $selected_subscription = $form_state->getValue('subscription');
+    $response = new AjaxResponse();
+
+    if ('0' != $selected_subscription) {
+      // If the selected option is not '0' => 'Newsletter',
+      // fetch the entity view.
+      $response_body_array = $this->generateSubscriptionFormElementView('node', $selected_subscription, 'subscription_form');
+      // !Important: keep the id selector, for subsequent ajax calls.
+      $response_body_array['#attributes'] = [
+        'id' => 'magazine-view',
+      ];
+      $response->addCommand(new HtmlCommand('#magazine-view', $response_body_array));
+    }
+    else {
+      // Else, return an empty render array, keeping the id selector,
+      // for subsequent ajax calls.
+      $response_body_array = [
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#value' => NULL,
+        '#attributes' => [
+          'id' => 'magazine-view',
+        ],
+      ];
+      $response->addCommand(new HtmlCommand('#magazine-view', $response_body_array));
+    }
+    return $response;
+
+  }
+
+  /**
+   * Generate the Entity View Render Array.
+   *
+   * @param string $entity_type
+   *   The entity type.
+   * @param int $id
+   *   The entity id.
+   * @param string $view_mode
+   *   The view mode.
+   *
+   * @return array
+   *   The response render array
+   */
+  protected function generateSubscriptionFormElementView($entity_type, $id, $view_mode) {
+    $entity = $this->entityManager->getStorage($entity_type)
+      ->load($id);
+    $view_builder = $this->entityManager->getViewBuilder('node');
+    return $view_builder->view($entity, $view_mode);
   }
 
 }
