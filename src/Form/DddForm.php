@@ -8,13 +8,40 @@ namespace Drupal\ddd_forms_talk\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Render\RendererInterface;
 
 /**
  * Class DddForm.
- *
- * @package Drupal\ddd_forms_talk\Form
  */
-class DddForm extends FormBase {
+class DddForm extends FormBase implements ContainerInjectionInterface {
+
+  /**
+   * The Renderer service.
+   *
+   * @var \Drupal\Core\Render\Renderer
+   */
+  protected $renderer;
+
+  /**
+   * DddForm constructor.
+   *
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The Renderer service.
+   */
+  public function __construct(RendererInterface $renderer) {
+    $this->renderer = $renderer;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('renderer')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -144,7 +171,21 @@ class DddForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    drupal_set_message($this->t('The Form was correctly sent!'));
+    $submitted_data = [
+      'Personal Info' => $form_state->getValue('personal_info'),
+    ];
+    $submitted_data_render_array = [
+      '#theme' => 'ddd_forms_talk_form_submission',
+      '#submitted_data' => $submitted_data,
+      '#attached' => [
+        'library' => ['ddd_forms_talk/default'],
+      ],
+    ];
+
+    drupal_set_message($this->t('The Form was correctly sent with the following values: @values',
+      [
+        '@values' => $this->renderer->render($submitted_data_render_array),
+      ]));
   }
 
 }

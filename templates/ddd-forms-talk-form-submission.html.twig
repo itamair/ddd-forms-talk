@@ -9,7 +9,7 @@
    * @ingroup themeable
    */
   #}
-  {{ dump() }}
+  {# {{ dump() }} #}
   <div class="form-values">
       <ul>
           {% for key,data in submitted_data %}
@@ -17,7 +17,9 @@
                   <div class='form-submission-fieldset-name'>{{ key }}</div>
                   <ul>
                       {% for sub_key,sub_data in data %}
+                          {% if sub_data is not empty and sub_key != 'type' %}
                               <li>{{ sub_key }}: {{ sub_data }}</li>
+                          {% endif %}
                       {% endfor %}
                   </ul>
               {% else %}
