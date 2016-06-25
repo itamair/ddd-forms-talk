@@ -1,0 +1,28 @@
+  {#
+  /**
+   * @file
+   * Theme implementation to ddd-forms-talk-form-submission.
+   *
+   * Available variables:
+   * - submitted_data: Associative array of form state vaules.
+   *
+   * @ingroup themeable
+   */
+  #}
+  {{ dump() }}
+  <div class="form-values">
+      <ul>
+          {% for key,data in submitted_data %}
+              {% if data is iterable %}
+                  <div class='form-submission-fieldset-name'>{{ key }}</div>
+                  <ul>
+                      {% for sub_key,sub_data in data %}
+                              <li>{{ sub_key }}: {{ sub_data }}</li>
+                      {% endfor %}
+                  </ul>
+              {% else %}
+                  <li class='form-submission-fieldset-name'>{{ key }}: {{ data }}</li>
+              {% endif %}
+          {% endfor %}
+      </ul>
+  </div>

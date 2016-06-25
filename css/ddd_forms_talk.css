@@ -1,0 +1,17 @@
+/*ddd_forms_talk stylesheet*/
+
+h1 {
+  margin: 0 !important;
+}
+
+.form-text-red {
+  color: #ff130a;
+}
+
+.form-text-green {
+  color: #1ba03a;
+}
+
+.form-submission-fieldset-name {
+  font-weight: bold;
+}

@@ -1,0 +1,4 @@
+default:
+  css:
+    component:
+      css/ddd_forms_talk.css: {}

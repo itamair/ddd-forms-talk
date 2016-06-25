@@ -1,0 +1,13 @@
+ddd_forms_talk.ddd_form:
+  title: DDD - Form Example
+  route_name: ddd_forms_talk.ddd_form
+  description: 'Sets a DDD Form Example'
+  menu_name: main
+  weight: 1
+
+ddd_forms_talk.ddd_form_config:
+  title: DDD - Configuration Form Example
+  route_name: ddd_forms_talk.ddd_form_config
+  parent: system.admin_config
+  description: 'Sets a DDD Configuration Form Example'
+  weight: 100

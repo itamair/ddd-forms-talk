@@ -1,0 +1,15 @@
+ddd_forms_talk.ddd_form:
+  path: '/ddd_form'
+  defaults:
+    _form: 'Drupal\ddd_forms_talk\Form\DddForm'
+    _title: 'DDD - Example Form'
+  requirements:
+    _permission: 'access content'
+
+ddd_forms_talk.ddd_form_config:
+  path: '/ddd_form_config'
+  defaults:
+    _form: 'Drupal\ddd_forms_talk\Form\DddFormConfig'
+    _title: 'DDD - Configuration Form Example'
+  requirements:
+    _permission: 'access administration pages'

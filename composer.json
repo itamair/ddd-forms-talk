@@ -1,0 +1,14 @@
+{
+  "name": "drupal/ddd_forms_talk",
+  "type": "drupal-module",
+  "description": "This is a demonstration module for my talk on Drupal 8 Forms, at the Drupal development Days in Milan - 2016",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/ddd_forms_talk",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "http://drupal.org/project/issues/ddd_forms_talk",
+    "source": "http://cgit.drupalcode.org/ddd_forms_talk"
+  },
+  "require": { }
+}

@@ -1,0 +1,23 @@
+ddd_forms_talk.settings:
+  type: config_object
+  label: 'DDD Forms Talk configuration'
+  mapping:
+    langcode:
+      type: string
+      label: 'Language code'
+    personal_info:
+      type: mapping
+      label: 'Personal Information Configuration'
+      mapping:
+        name:
+          type: string
+          label: 'Name default String'
+        surname:
+          type: string
+          label: 'Surname default String'
+        email:
+          type: string
+          label: 'Email config default value'
+        type:
+          type: integer
+          label: 'Profile Type default value'
