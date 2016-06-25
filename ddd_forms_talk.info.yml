@@ -1,5 +1,5 @@
-name: DDD - Forms Talk
+name: DDD - Drupal 8 Forms Training Talk
 type: module
-description: This is a demonstration module for my talk on Drupal 8 Forms, at the Drupal development Days in Milan - 2016
+description: This is the Drupal 8 demonstration module used for my talk on Drupal 8 Forms,on the 23th of June, at the Drupal Development Days, helded in Milan - 2016
 core: 8.x
 package: ddd

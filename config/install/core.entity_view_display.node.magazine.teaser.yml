@@ -1,0 +1,42 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.magazine.field_annual_price
+    - field.field.node.magazine.field_description
+    - field.field.node.magazine.field_image_cover
+    - image.style.medium
+    - node.type.magazine
+  module:
+    - image
+    - user
+id: node.magazine.teaser
+targetEntityType: node
+bundle: magazine
+mode: teaser
+content:
+  field_annual_price:
+    type: number_decimal
+    weight: 1
+    label: inline
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+  field_image_cover:
+    type: image
+    weight: 0
+    label: hidden
+    settings:
+      image_style: medium
+      image_link: ''
+    third_party_settings: {  }
+  links:
+    weight: 2
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_description: true
