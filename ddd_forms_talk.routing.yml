@@ -13,3 +13,10 @@ ddd_forms_talk.ddd_form_config:
     _title: 'DDD - Configuration Form Example'
   requirements:
     _permission: 'access administration pages'
+
+geocoder_autocomplete:
+  path: /geocoder/autocomplete
+  defaults:
+    _controller: '\Drupal\ddd_forms_talk\Controller\GeocoderController::geocoderAutocomplete'
+  requirements:
+    _permission: 'access content'

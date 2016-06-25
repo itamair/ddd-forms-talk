@@ -148,6 +148,16 @@ class DddForm extends FormBase {
       '#default_value' => $this->config('ddd_forms_talk.settings')->get('personal_info.email'),
     );
 
+    $form['personal_info']['address'] = array(
+      '#type' => 'textfield',
+      '#title' => $this->t('Address'),
+      '#autocomplete_route_name' => 'geocoder_autocomplete',
+      '#autocomplete_route_parameters' => array(),
+      '#placeholder' => $this->t('Start typing an address ...'),
+      '#maxlength' => 255,
+      '#size' => 64,
+    );
+
     $this->subscriptionsOptions = [
       '0' => 'Newsletter',
     ];
@@ -251,7 +261,7 @@ class DddForm extends FormBase {
       ],
     ];
 
-    drupal_set_message($this->t('The Form was correctly sent with the following values: @values',
+    drupal_set_message(t('The Form was correctly sent with the following values: @values',
       [
         '@values' => $this->renderer->render($submitted_data_render_array),
       ]));

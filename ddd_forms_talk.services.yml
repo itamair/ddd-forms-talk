@@ -1,0 +1,7 @@
+# defines a geocoderAutocomplete service with the following dependencies : http_client service from core.
+services:
+  geocoderautocomplete.consumer:
+    class: Drupal\ddd_forms_talk\GeocoderJsonConsumer
+    arguments: ['@http_client', '@language_manager']
+    tags:
+      - { name: geo_service }
