@@ -9,13 +9,13 @@ namespace Drupal\ddd_forms_talk\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
  * Class DddForm.
  */
-class DddForm extends FormBase implements ContainerInjectionInterface {
+class DddForm extends FormBase {
 
   /**
    * The Renderer service.
@@ -25,13 +25,30 @@ class DddForm extends FormBase implements ContainerInjectionInterface {
   protected $renderer;
 
   /**
+   * The Entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityManager;
+
+  /**
+   * The Subscription Options.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $subscriptionsOptions;
+
+  /**
    * DddForm constructor.
    *
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The Renderer service.
+   * @param EntityTypeManagerInterface $entity_manager
+   *   The entity manager.
    */
-  public function __construct(RendererInterface $renderer) {
+  public function __construct(RendererInterface $renderer, EntityTypeManagerInterface $entity_manager) {
     $this->renderer = $renderer;
+    $this->entityManager = $entity_manager;
   }
 
   /**
@@ -39,7 +56,8 @@ class DddForm extends FormBase implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('renderer')
+      $container->get('renderer'),
+      $container->get('entity_type.manager')
     );
   }
 
@@ -92,7 +110,7 @@ class DddForm extends FormBase implements ContainerInjectionInterface {
     $form['personal_info']['type'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Are you representing a Company?'),
-
+      '#default_value' => $this->config('ddd_forms_talk.settings')->get('personal_info.type'),
     );
 
     $form['personal_info']['company_name'] = array(
@@ -128,6 +146,25 @@ class DddForm extends FormBase implements ContainerInjectionInterface {
       '#default_value' => $this->config('ddd_forms_talk.settings')->get('personal_info.email'),
     );
 
+    $this->subscriptionsOptions = [
+      '0' => 'Newsletter',
+    ];
+
+    $magazines = $this->entityManager->getStorage('node')->loadMultiple();
+
+    foreach ($magazines as $id => $magazine) {
+      $this->subscriptionsOptions[$id] = $magazine->getTitle();
+    }
+
+    $form['subscription'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Annual Subscription'),
+      '#description' => $this->t('Choose the Newsletter or the Magazine you want to subscribe for 1 year'),
+      '#options' => $this->subscriptionsOptions,
+      '#default_value' => 'Newsletter',
+      '#required' => TRUE,
+    ];
+
     // Submit button.
     $form['submit'] = [
       '#type' => 'submit',
@@ -138,7 +175,6 @@ class DddForm extends FormBase implements ContainerInjectionInterface {
         ],
       ],
     ];
-
     return $form;
   }
 
@@ -166,13 +202,13 @@ class DddForm extends FormBase implements ContainerInjectionInterface {
 
   }
 
-
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $submitted_data = [
       'Personal Info' => $form_state->getValue('personal_info'),
+      'Annual Subscription' => $this->subscriptionsOptions[$form_state->getValue('subscription')],
     ];
     $submitted_data_render_array = [
       '#theme' => 'ddd_forms_talk_form_submission',
