@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains /Drupal/geocoder_autocomplete/GeocoderJsonConsumer.
+ * Contains /Drupal/ddd_forms_talk/GeocoderJsonConsumer.
  */
 
 namespace Drupal\ddd_forms_talk;
