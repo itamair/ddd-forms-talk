@@ -11,10 +11,13 @@ whose contents will be used to experiment most advanced Form functionalities (De
 Use the incremental branches to analyze the DDD Form Example evolutions and incremental functionalities:
 
 1-Personal-Info
+
 2-Personal-Info-with-Twig_Template_output
 
 > from now on it is needed you add some fake "magazine" type contents/nodes
 
 3-Magazine-choice
+
 4-Ajax
-5-Address-Geocoding (*need to clear drupal cache / drush cr, after swithcing on this branch*)
+
+5-Address-Geocoding (*need to clear drupal cache / drush cr, after switching on this branch*)
